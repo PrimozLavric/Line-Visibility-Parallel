@@ -4,7 +4,7 @@
 #include <chrono>
 #include <pthread.h>
 
-#define N_THREAD 1
+#define N_THREAD 8
 
 using namespace std;
 typedef std::chrono::steady_clock Clock;
@@ -222,10 +222,10 @@ int main() {
 
 	//Test your algorithm on the following cases
 	//You can also try your own depending on the hardware you have on your disposal
-	//long long N = (long long)32 * pow((float)10, 6); 		p = 0.01;
+	long long N = (long long)32 * pow((float)10, 6); 		p = 0.01;
 	//long long N = (long long)64 * pow((float)10, 6);		p = 0.006;
 	//long long N = (long long)128 * pow((float)10, 6);		p = 0.004;
-	long long N = (long long)256 * pow((float)10, 6);		p = 0.002;
+	//long long N = (long long)256 * pow((float)10, 6);		p = 0.002;
 	//long long N = (long long)512 * pow((float)10, 6);		p = 0.001;
 	//long long N = (long long)1024 * pow((float)10, 6);	p = 0.001;
 

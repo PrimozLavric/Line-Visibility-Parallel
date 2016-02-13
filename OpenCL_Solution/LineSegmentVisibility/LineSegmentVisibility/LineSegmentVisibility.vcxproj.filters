@@ -32,6 +32,15 @@
     <None Include="sum.cl">
       <Filter>Kernels</Filter>
     </None>
+    <None Include="calculate_maximums.cl">
+      <Filter>Kernels</Filter>
+    </None>
+    <None Include="propagate_maximums.cl">
+      <Filter>Kernels</Filter>
+    </None>
+    <None Include="propagation_height_calc.cl">
+      <Filter>Kernels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataGenerator.h">

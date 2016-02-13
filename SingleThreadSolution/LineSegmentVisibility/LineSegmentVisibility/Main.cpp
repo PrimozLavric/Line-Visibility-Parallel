@@ -6,7 +6,7 @@
 using namespace std;
 typedef std::chrono::steady_clock Clock;
 
-float* vidnaVisina(lines *data, int N) {
+float *vidnaVisina(lines *data, int N) {
 	// Allocate array for visibile section heights
 	float* visibileHeight = (float*)malloc(N * sizeof(float));
 
@@ -15,12 +15,13 @@ float* vidnaVisina(lines *data, int N) {
 
 	// Initialize starting sightHeight
 	visibileHeight[0] = data->y[0];
-
+	float *kas = (float*)malloc(N * sizeof(float));
+	kas[0] = k;
 	for (int i = 1; i < N; i++) {
 		
 		float prevK = k;
 		k = max(k, data->y[i] / data->x[i]);
-
+		kas[i] = k;
 		// If new y/x ratio is higher than last one, it means that this line is visibile
 		if (k > prevK)
 			visibileHeight[i] = data->y[i] - prevK * data->x[i];
@@ -28,7 +29,7 @@ float* vidnaVisina(lines *data, int N) {
 			visibileHeight[i] = 0;
 	}
 
-	return visibileHeight;
+	return kas;
 }
 
 
@@ -43,10 +44,10 @@ int main() {
 
 	//Test your algorithm on the following cases
 	//You can also try your own depending on the hardware you have on your disposal
-	//long long N = (long long)32 * pow((float)10, 6); 		p = 0.01;
+	long long N = (long long)32 * pow((float)10, 6); 		p = 0.01;
 	//long long N = (long long)64 * pow((float)10, 6);		p = 0.006;
 	//long long N = (long long)128 * pow((float)10, 6);		p = 0.004;
-	long long N = (long long)256 * pow((float)10, 6);		p = 0.002;
+	//long long N = (long long)256 * pow((float)10, 6);		p = 0.002;
 	//long long N = (long long)512 * pow((float)10, 6);		p = 0.001;
 	//long long N = (long long)1024 * pow((float)10, 6);	p = 0.001;
 	//Generate data
@@ -55,20 +56,8 @@ int main() {
 	//Size of data in MB
 	printf("Data size: %d MB\n", N * 2 * sizeof(float) / 1024 / 1024);
 
-	/*
-	long long N = 11;
-	float x[11] = { 2, 4, 5,  8, 9, 11, 12, 14, 20, 22, 24 };
-	float y[11] = { 2, 3, 6, 12, 12, 5, 19, 19, 35, 37, 48 };
-
-	lines data;
-	//lines data;
-	data.x = (float*)malloc(N * sizeof(float));
-	memcpy(data.x, x, N * sizeof(float));
-	data.y = (float*)malloc(N * sizeof(float));
-	memcpy(data.y, y, N * sizeof(float));
-	*/
 	auto t1 = Clock::now();
-	
+
 	float *rez = vidnaVisina(&data, N);
 
 	auto t2 = Clock::now();
