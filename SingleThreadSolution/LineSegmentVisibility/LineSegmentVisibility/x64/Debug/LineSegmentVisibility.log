@@ -1,15 +1,31 @@
-﻿Build started 13.2.2016 22:48:35.
+﻿Build started 17.2.2016 0:54:03.
      1>Project "D:\Sola\VSPA\Seminar\SingleThreadSolution\LineSegmentVisibility\LineSegmentVisibility\LineSegmentVisibility.vcxproj" on node 2 (Build target(s)).
      1>InitializeBuildStatus:
-         Creating "x64\Debug\LineSegm.B34CE95B.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "x64\Debug\LineSegm.B34CE95B.tlog\unsuccessfulbuild".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Main.cpp
+         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Ox /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt DataGenerator.cpp Main.cpp
          Main.cpp
-     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(48): warning C4244: 'initializing': conversion from 'float' to '__int64', possible loss of data
-     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(48): warning C4305: '=': truncation from 'double' to 'float'
-     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(60): warning C4244: 'argument': conversion from '__int64' to 'int', possible loss of data
-     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(56): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
-         d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(56): note: consider using '%zd' in the format string
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(45): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(57): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(57): warning C4305: '=': truncation from 'double' to 'float'
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(59): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(59): warning C4305: '=': truncation from 'double' to 'float'
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(61): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(61): warning C4305: '=': truncation from 'double' to 'float'
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(63): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(63): warning C4305: '=': truncation from 'double' to 'float'
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(65): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(65): warning C4305: '=': truncation from 'double' to 'float'
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(76): warning C4244: 'argument': conversion from '__int64' to 'int', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(73): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
+         d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\main.cpp(73): note: consider using '%zd' in the format string
+         DataGenerator.cpp
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\datagenerator.cpp(22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\datagenerator.cpp(25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\datagenerator.cpp(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+     1>d:\sola\vspa\seminar\singlethreadsolution\linesegmentvisibility\linesegmentvisibility\datagenerator.cpp(49): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Sola\VSPA\Seminar\SingleThreadSolution\LineSegmentVisibility\x64\Debug\LineSegmentVisibility.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\Sola\VSPA\Seminar\SingleThreadSolution\LineSegmentVisibility\x64\Debug\LineSegmentVisibility.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Sola\VSPA\Seminar\SingleThreadSolution\LineSegmentVisibility\x64\Debug\LineSegmentVisibility.lib" /MACHINE:X64 x64\Debug\DataGenerator.obj
          x64\Debug\Main.obj
@@ -21,4 +37,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.54
+Time Elapsed 00:00:01.03

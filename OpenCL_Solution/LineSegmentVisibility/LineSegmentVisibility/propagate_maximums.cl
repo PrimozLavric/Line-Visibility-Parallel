@@ -8,6 +8,6 @@ __kernel void propagate_maximums(__global float *propagated, __global float *max
 	int wid = get_group_id(0);
 
 	// Propagate backwards
-	propagated[2 * gid] = max(maximums[wid], propagated[2 * gid]);
-	propagated[2 * gid + 1] = max(maximums[wid], propagated[2 * gid + 1]);
+	propagated[2 * gid] = fmax(maximums[wid], propagated[2 * gid]);
+	propagated[2 * gid + 1] = fmax(maximums[wid], propagated[2 * gid + 1]);
 }

@@ -11,11 +11,14 @@
 #define WORKGROUP_SIZE 1024
 #define BATCH_SIZE (2 * WORKGROUP_SIZE)
 #define MAX_SOURCE_SIZE	16384
+#define PRINT_BUILD_LOGS false
 
 typedef std::chrono::steady_clock Clock;
 
 using namespace std;
 char ch;
+
+vector<double> stopwatch;
 
 cl_program compileKernel(cl_context *context, cl_device_id deviceID, char* kernelPath) {
 	// cl_int for storing returning status code
@@ -29,7 +32,7 @@ cl_program compileKernel(cl_context *context, cl_device_id deviceID, char* kerne
 	fp = fopen(kernelPath, "r");
 	if (!fp)
 	{
-		fprintf(stderr, ":-(#\n");
+		fprintf(stderr, "Well ...\n");
 		exit(1);
 	}
 	source_str = (char*)malloc(MAX_SOURCE_SIZE);
@@ -58,7 +61,8 @@ cl_program compileKernel(cl_context *context, cl_device_id deviceID, char* kerne
 	// Write log to reserved string
 	ret = clGetProgramBuildInfo(program, deviceID, CL_PROGRAM_BUILD_LOG, build_log_len, build_log, NULL);
 	// Print build log
-	printf("Build Log:\n%s", build_log);
+	if (PRINT_BUILD_LOGS)
+		printf("Build Log:\n%s", build_log);
 	free(build_log);
 
 	return program;
@@ -72,6 +76,8 @@ inline int logBase(float x, float n) {
 
 
 float* lineVisibility(lines* L, long long  N) {
+
+	float *visibileHeight = (float*)malloc(sizeof(float)* N);
 
 	cl_int ret;
 
@@ -116,7 +122,7 @@ float* lineVisibility(lines* L, long long  N) {
 
 	programs.push_back(compileKernel(&context, device_id[0], "propagation_height_calc.cl"));
 	// Wait here
-	scanf("%c", &ch);
+	//scanf("%c", &ch);
 	auto t1 = Clock::now();
 	// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		// **************** WORK DISTRIBUTION ****************
@@ -145,7 +151,7 @@ float* lineVisibility(lines* L, long long  N) {
 	group_counts.push_back(N / BATCH_SIZE);
 	global_item_sizes.push_back(group_counts[0] * local_item_size);
 	kernel_data.push_back(clCreateBuffer(context, CL_MEM_READ_WRITE, (group_counts[0] + BATCH_SIZE - (group_counts[0] % BATCH_SIZE))  * sizeof(float), NULL, &ret));
-
+	
 	// Sub iterations
 	int i = 1;
 	do {
@@ -164,7 +170,7 @@ float* lineVisibility(lines* L, long long  N) {
 	// Add main line visibility kernel to queue
 	ret = clEnqueueNDRangeKernel(command_queue, kernels[0], 1, NULL,
 		&global_item_sizes[0], &local_item_size, 0, NULL, NULL);
-	
+
 	// Add maximum calculating kernels (upsweep)
 	for (int i = 1; i < group_counts.size(); i++) {
 		// Create kernel
@@ -208,20 +214,11 @@ float* lineVisibility(lines* L, long long  N) {
 	ret = clEnqueueNDRangeKernel(command_queue, kernels.back(), 1, NULL,
 		&global_item_sizes[0], &local_item_size, 0, NULL, NULL);
 	
-	/*ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0,
-		N * sizeof(float), L->x, 0, NULL, NULL);*/
-	
-	
-	float *T = (float*)malloc(N * sizeof(float));
-	ret = clEnqueueReadBuffer(command_queue, c_mem_obj, CL_TRUE, 0,
-		N * sizeof(float), L->x, 0, NULL, NULL);
-	/*
-	for (int i = 0; i < N; i++) {
-		L->x[i] = max(L->y[i] - T[i] * L->x[i], 0.0f);
-	}*/
+	ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0,
+		N * sizeof(float), visibileHeight, 0, NULL, NULL);
 
 	auto t2 = Clock::now();
-	std::cout << "Time required: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000000.0 << "s" << endl;
+	stopwatch.push_back(std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000000.0);
 
 	// Clear
 	ret = clFlush(command_queue);
@@ -244,14 +241,38 @@ float* lineVisibility(lines* L, long long  N) {
 	ret = clReleaseCommandQueue(command_queue);
 	ret = clReleaseContext(context);
 
-	return L->x;
+	return visibileHeight;
+}
+
+float *vidnaVisina(lines *data, int N) {
+	// Allocate array for visibile section heights
+	float* visibileHeight = (float*)malloc(N * sizeof(float));
+	float* k = (float*)malloc(N * sizeof(float));
+
+	// Calculate first line y/x ratio
+	k[0] = data->y[0] / data->x[0];
+
+	// Initialize starting sightHeight
+	visibileHeight[0] = data->y[0];
+	
+	for (int i = 1; i < N; i++) {
+		k[i] = fmax(k[i-1], data->y[i] / data->x[i]);
+
+		// If new y/x ratio is higher than last one, it means that this line is visibile
+		if (k[i] > k[i-1])
+			visibileHeight[i] = data->y[i] - k[i-1] * data->x[i];
+		else
+			visibileHeight[i] = 0;
+	}
+
+	return visibileHeight;
 }
 
 
 int main(void)
 {
 	//initalize random seed
-	srand(314);
+	srand(time(NULL));
 
 
 	float maxAngle = 85.0;
@@ -268,17 +289,49 @@ int main(void)
 	//Size of data in MB
 	printf("Data size: %d MB\n", N * 2 * sizeof(float) / 1024 / 1024);
 
+
 	// Generate data
 	lines data = generateData(N, p, maxAngle);
 
-	float* temp = lineVisibility(&data, N);
+	int iter = 100;
 
-	float sum = 0;
-	for (int i = 0; i < N; i++) {
-		sum += temp[i];
+	for (int i = 0; i < iter; i++) {
+		float* tempGpu = lineVisibility(&data, N);
+		free(tempGpu);
 	}
 
-	cout << sum << endl;
+	// Mean
+	double mean = 0;
+	for (int i = 0; i < iter; i++) {
+		mean += stopwatch[i];
+	}
+	mean = mean / iter;
+
+	// Standard deviation
+	double sDev = 0;
+	for (int i = 0; i < iter; i++) {
+		sDev += pow(stopwatch[i] - mean, 2);
+	}
+	sDev = sqrt(sDev / iter);
+
+	cout << "No. of iterations: " << iter << endl;
+	cout << "Mean: " << mean << endl;
+	cout << "Standard deviation: " << sDev << endl;
+
+	
+	free(data.x);
+	free(data.y);
+	//float sumLinear = 0;
+	//float* tempLinear = vidnaVisina(&data, N);
+	/*
+	float sumGpu = 0;
+	for (int i = 0; i < N; i++) {
+		// Because gpu has higher error
+		if ((tempLinear[i] - tempGpu[i]) > 0.005)
+			sumLinear += (tempLinear[i] - tempGpu[i]);
+	}
+	*/
+	//cout <<  sumLinear << endl;
 
 	system("pause");
 

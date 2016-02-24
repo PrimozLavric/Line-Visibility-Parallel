@@ -9,9 +9,9 @@ __kernel void propagation_height_calc(__global float *propagated, __global const
 
 	// Propagate backwards
 	// Calculate visibile height
-	propagated[2 * gid] = max(maximums[wid], propagated[2 * gid]);
-	propagated[2 * gid + 1] = max(maximums[wid], propagated[2 * gid + 1]);
+	propagated[2 * gid] = fmax(maximums[wid], propagated[2 * gid]);
+	propagated[2 * gid + 1] = fmax(maximums[wid], propagated[2 * gid + 1]);
 	// Visibile heights contains X values
-	visibile_heights[2 * gid] = max(0.0f, Y[2 * gid] - visibile_heights[2 * gid] * propagated[2 * gid]);
-	visibile_heights[2 * gid + 1] = max(0.0f, Y[2 * gid + 1] - visibile_heights[2 * gid + 1] * propagated[2 * gid + 1]);
+	visibile_heights[2 * gid] = fmax(0.0f, Y[2 * gid] - visibile_heights[2 * gid] * propagated[2 * gid]);
+	visibile_heights[2 * gid + 1] = fmax(0.0f, Y[2 * gid + 1] - visibile_heights[2 * gid + 1] * propagated[2 * gid + 1]);
 }

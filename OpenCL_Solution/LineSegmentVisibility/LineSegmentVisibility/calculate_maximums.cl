@@ -12,7 +12,7 @@ __kernel void calculate_maximums(__global float *input, __global float *maximums
 
 	// Copy to local memory and calculate first iteration in the process
 	local_mem[2 * lid] = input[2 * gid];
-	local_mem[2 * lid + 1] = max(local_mem[2 * lid], input[2 * gid + 1]);
+	local_mem[2 * lid + 1] = fmax(local_mem[2 * lid], input[2 * gid + 1]);
 
 	// UPSWEEP
 	// Start at step 2 (Step one is already calculated)
@@ -26,7 +26,7 @@ __kernel void calculate_maximums(__global float *input, __global float *maximums
 			int ai = offset * (2 * lid + 1) - 1;
 			int bi = offset * (2 * lid + 2) - 1;
 
-			local_mem[bi] = max(local_mem[ai], local_mem[bi]);
+			local_mem[bi] = fmax(local_mem[ai], local_mem[bi]);
 		}
 
 		// Increment step size
@@ -56,7 +56,7 @@ __kernel void calculate_maximums(__global float *input, __global float *maximums
 
 			float tmp = local_mem[ai];
 			local_mem[ai] = local_mem[bi];
-			local_mem[bi] = max(local_mem[bi], tmp);
+			local_mem[bi] = fmax(local_mem[bi], tmp);
 		}
 	}
 

@@ -128,7 +128,6 @@
     <None Include="calculate_maximums.cl" />
     <None Include="propagate_maximums.cl" />
     <None Include="propagation_height_calc.cl" />
-    <None Include="sum.cl" />
     <None Include="line_visibility.cl" />
   </ItemGroup>
   <ItemGroup>

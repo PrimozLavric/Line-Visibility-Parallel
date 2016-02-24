@@ -29,9 +29,6 @@
     <None Include="line_visibility.cl">
       <Filter>Kernels</Filter>
     </None>
-    <None Include="sum.cl">
-      <Filter>Kernels</Filter>
-    </None>
     <None Include="calculate_maximums.cl">
       <Filter>Kernels</Filter>
     </None>

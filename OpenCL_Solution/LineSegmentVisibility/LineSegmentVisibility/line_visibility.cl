@@ -12,7 +12,7 @@ __kernel void line_visibility(__global float *X, __global const float *Y, __glob
 
 	// Initialize coefficients and calculate first iteration
 	local_mem[2 * lid] = Y[2 * gid] / X[2 * gid];
-	local_mem[2 * lid + 1] = max(local_mem[2 * lid], Y[2 * gid + 1] / X[2 * gid + 1]);
+	local_mem[2 * lid + 1] = fmax(local_mem[2 * lid], Y[2 * gid + 1] / X[2 * gid + 1]);
 
 	// UPSWEEP
 	// Start at step 2 (Step one is already calculated)
@@ -26,7 +26,7 @@ __kernel void line_visibility(__global float *X, __global const float *Y, __glob
 			int ai = offset * (2 * lid + 1) - 1;
 			int bi = offset * (2 * lid + 2) - 1;
 
-			local_mem[bi] = max(local_mem[ai], local_mem[bi]);
+			local_mem[bi] = fmax(local_mem[ai], local_mem[bi]);
 		}
 
 		// Increment step size
@@ -55,7 +55,7 @@ __kernel void line_visibility(__global float *X, __global const float *Y, __glob
 
 			float tmp = local_mem[ai];
 			local_mem[ai] = local_mem[bi];
-			local_mem[bi] = max(local_mem[bi], tmp);
+			local_mem[bi] = fmax(local_mem[bi], tmp);
 		}
 	}
 
