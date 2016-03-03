@@ -64,7 +64,6 @@ int main() {
 	Ns.push_back(N); ps.push_back(p);
 	N = (long long)32 * pow((float)10, 6); 		p = 0.01;
 	Ns.push_back(N); ps.push_back(p);
-	
 
 	for (int i = 0; i < Ns.size(); i++) {
 		// generate data
