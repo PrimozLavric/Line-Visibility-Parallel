@@ -1,0 +1,25 @@
+Data size: 3906 MB
+No. of iterations: 2
+Mean: 26.5055
+Standard deviation: 0.00723327
+
+Data size: 1953 MB
+No. of iterations: 2
+Mean: 13.0861
+Standard deviation: 0.0432753
+
+Data size: 976 MB
+No. of iterations: 2
+Mean: 6.35484
+Standard deviation: 0.040833
+
+Data size: 488 MB
+No. of iterations: 2
+Mean: 3.1614
+Standard deviation: 0.000599504
+
+Data size: 244 MB
+No. of iterations: 2
+Mean: 1.58928
+Standard deviation: 0.00503428
+

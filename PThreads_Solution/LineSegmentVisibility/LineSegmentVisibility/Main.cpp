@@ -3,11 +3,15 @@
 #include <algorithm>
 #include <chrono>
 #include <pthread.h>
-
+#include <vector>
+#include <fstream>
 #define N_THREAD 8
+#define N_THREAD_STR "8"
+#define OUT_NAME "Result_" N_THREAD_STR ".txt"
 
 using namespace std;
 typedef std::chrono::steady_clock Clock;
+vector<double> stopwatch;
 
 // Thread barrier
 pthread_barrier_t barrier;
@@ -73,7 +77,6 @@ void *calculateVisibility(void *arg) {
 
 		// In first iteration we must also do the initialization of coefficients
 		if (i == 0) {
-			auto t1 = Clock::now();
 
 			for (int j = begin; j < begin + (stepsThread * forwStep); j += forwStep) {
 				// In each iteration we initialize 2 coefficients ==> 2^0 = 1;
@@ -85,9 +88,6 @@ void *calculateVisibility(void *arg) {
 					k[j] = k[j - backStep];
 			}
 
-			// Time required
-			auto t2 = Clock::now();
-			std::cout << "Time required: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000000.0 << "s" << endl;
 		}
 		else {
 			for (int j = begin; j < begin + (stepsThread * forwStep); j += forwStep) {
@@ -205,8 +205,9 @@ float* visibileSegments(lines* data, int size) {
 
 	// Time required for parallel processing
 	auto t2 = Clock::now();
-	std::cout << "Time required: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000000.0 << "s" << endl;
+	stopwatch.push_back(std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000000.0);
 
+	free(k);
 	return visibileHeights;
 }
 
@@ -214,38 +215,71 @@ float* visibileSegments(lines* data, int size) {
 int main() {
 
 	//initalize random seed
-	srand(314);
-
+	srand(time(NULL));
 
 	float maxAngle = 85.0;
 	float p = 0.0;
+	long long N = 1;
+	int iter = 100;
 
+	vector<long long> Ns;
+	vector<float> ps;
 	//Test your algorithm on the following cases
 	//You can also try your own depending on the hardware you have on your disposal
-	long long N = (long long)32 * pow((float)10, 6); 		p = 0.01;
-	//long long N = (long long)64 * pow((float)10, 6);		p = 0.006;
-	//long long N = (long long)128 * pow((float)10, 6);		p = 0.004;
-	//long long N = (long long)256 * pow((float)10, 6);		p = 0.002;
-	//long long N = (long long)512 * pow((float)10, 6);		p = 0.001;
-	//long long N = (long long)1024 * pow((float)10, 6);	p = 0.001;
 
-	//Generate data
-	lines data = generateData(N, p, maxAngle);
+	N = (long long)512 * pow((float)10, 6);		p = 0.001;
+	Ns.push_back(N); ps.push_back(p);
+	N = (long long)256 * pow((float)10, 6);		p = 0.002;
+	Ns.push_back(N); ps.push_back(p);
+	N = (long long)128 * pow((float)10, 6);		p = 0.004;
+	Ns.push_back(N); ps.push_back(p);
+	N = (long long)64 * pow((float)10, 6);		p = 0.006;
+	Ns.push_back(N); ps.push_back(p);
+	N = (long long)32 * pow((float)10, 6); 		p = 0.01;
+	Ns.push_back(N); ps.push_back(p);
 
-	//Size of data in MB
-	printf("Data size: %d MB\n", N * 2 * sizeof(float) / 1024 / 1024);
+	ofstream myfile;
+	myfile.open(OUT_NAME);
 
-	float *rez = visibileSegments(&data, N);
+	for (int i = 0; i < Ns.size(); i++) {
+		// generate data
+		lines data = generateData(Ns[i], ps[i], maxAngle);
+		//Size of data in MB
+		
+		
+		myfile << "Data size: " << Ns[i] * 2 * sizeof(float) / 1024 / 1024 << " MB" << endl;
+		//printf("Data size: %d MB\n", Ns[i] * 2 * sizeof(float) / 1024 / 1024);
 
-	float sum = 0;
-	for (int i = 0; i < N; i++) {
-		sum += rez[i];
+		for (int j = 0; j < iter; j++) {
+			float *rez = visibileSegments(&data, Ns[i]);
+			free(rez);
+		}
+
+		// Mean
+		double mean = 0;
+		for (int i = 0; i < iter; i++) {
+			mean += stopwatch[i];
+		}
+		mean = mean / iter;
+
+		// Standard deviation
+		double sDev = 0;
+		for (int i = 0; i < iter; i++) {
+			sDev += pow(stopwatch[i] - mean, 2);
+		}
+		sDev = sqrt(sDev / iter);
+
+		myfile << "No. of threads: " << N_THREAD << endl;
+		myfile << "No. of iterations: " << iter << endl;
+		myfile << "Mean: " << mean << endl;
+		myfile << "Standard deviation: " << sDev << endl << endl;
+
+		free(data.x);
+		free(data.y);
+		stopwatch.clear();
 	}
-
-	cout << "Sum: " << sum << endl;
-	
-
-	system("pause");
+	myfile.close();
+	//system("pause");
 
 	return 0;
 }

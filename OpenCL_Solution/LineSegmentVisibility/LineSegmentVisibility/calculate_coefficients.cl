@@ -1,7 +1,7 @@
 #define WORKGROUP_SIZE 1024
 #define BATCH_SIZE (2 * WORKGROUP_SIZE)
 
-__kernel void line_visibility(__global float *X, __global const float *Y, __global float *coefficients, __global float *largest_coefficients)
+__kernel void calculate_coefficients(__global float *X, __global const float *Y, __global float *coefficients, __global float *largest_coefficients)
 {
 	__local float local_mem[WORKGROUP_SIZE * 2];
 

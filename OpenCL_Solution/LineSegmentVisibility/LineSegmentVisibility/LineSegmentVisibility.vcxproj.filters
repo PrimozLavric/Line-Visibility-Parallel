@@ -26,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="line_visibility.cl">
-      <Filter>Kernels</Filter>
-    </None>
     <None Include="calculate_maximums.cl">
       <Filter>Kernels</Filter>
     </None>
@@ -36,6 +33,9 @@
       <Filter>Kernels</Filter>
     </None>
     <None Include="propagation_height_calc.cl">
+      <Filter>Kernels</Filter>
+    </None>
+    <None Include="calculate_coefficients.cl">
       <Filter>Kernels</Filter>
     </None>
   </ItemGroup>

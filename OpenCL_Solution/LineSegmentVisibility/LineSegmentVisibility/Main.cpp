@@ -113,8 +113,8 @@ float* lineVisibility(lines* L, long long  N) {
 	cl_command_queue command_queue = clCreateCommandQueue(context, device_id[0], 0, &ret);
 
 	// Kernel 1
-	programs.push_back(compileKernel(&context, device_id[0], "line_visibility.cl"));
-	kernels.push_back(clCreateKernel(programs[0], "line_visibility", &ret));
+	programs.push_back(compileKernel(&context, device_id[0], "calculate_coefficients.cl"));
+	kernels.push_back(clCreateKernel(programs[0], "calculate_coefficients", &ret));
 	// Kernel 2
 	programs.push_back(compileKernel(&context, device_id[0], "calculate_maximums.cl"));
 
